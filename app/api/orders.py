@@ -8,7 +8,7 @@ router = APIRouter()
 
 @router.post("", status_code=201)
 async def create_order(order: OrderCreate, db=Depends(get_database)):
-    # Calculate total and prepare order document
+   
     total = 0
     order_items = []
     
@@ -20,8 +20,7 @@ async def create_order(order: OrderCreate, db=Depends(get_database)):
             
         if not product:
             raise HTTPException(status_code=404, detail=f"Product {item.productId} not found")
-        
-        # Add product details to order item
+      
         order_items.append({
             "productId": item.productId,
             "qty": item.qty,
@@ -33,7 +32,7 @@ async def create_order(order: OrderCreate, db=Depends(get_database)):
         
         total += product["price"] * item.qty
     
-    # Create order document
+
     order_doc = {
         "userId": order.userId,
         "items": order_items,
@@ -55,7 +54,7 @@ async def get_orders(
     cursor = db.orders.find(query).skip(offset).limit(limit)
     orders = await cursor.to_list(length=limit)
     
-    # Format orders according to required response structure
+  
     formatted_orders = []
     for order in orders:
         formatted_order = {
@@ -63,8 +62,6 @@ async def get_orders(
             "items": [],
             "total": order["total"]
         }
-        
-        # Format items to match required structure
         for item in order["items"]:
             formatted_order["items"].append({
                 "productDetails": {
@@ -75,19 +72,17 @@ async def get_orders(
             })
             
         formatted_orders.append(formatted_order)
-    
-    # Get total count for pagination
+
     total = await db.orders.count_documents(query)
-    
-    # Calculate pagination values
+
     next_offset = offset + limit if offset + limit < total else None
-    previous_offset = offset - limit if offset - limit >= 0 else None
+    previous_offset = offset - limit if offset > 0 else None
     
     return {
         "data": formatted_orders,
         "page": {
             "next": str(next_offset) if next_offset is not None else None,
-            "limit": limit,
+            "limit": len(formatted_orders),
             "previous": str(previous_offset) if previous_offset is not None else None
         }
     } 
