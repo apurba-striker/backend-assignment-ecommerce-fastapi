@@ -4,6 +4,4 @@ pymongo==4.6.0
 pydantic==2.4.2
 python-dotenv==1.0.0
 motor==3.3.1
-gunicorn==21.2.0
-# Explicitly exclude packages that require Rust compilation
-cryptography==41.0.0; platform_machine != 'aarch64' and platform_machine != 'arm64' 
+gunicorn==21.2.0 

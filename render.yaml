@@ -9,3 +9,7 @@ services:
         sync: false
       - key: DB_NAME
         sync: false
+      - key: PIP_NO_BUILD_ISOLATION
+        value: "1"
+      - key: PIP_USE_PEP517
+        value: "0"

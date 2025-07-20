@@ -1,16 +1,17 @@
 #!/bin/bash
-set -e
+set -o errexit
+set -o pipefail
+set -o nounset
 
-# Upgrade pip and setuptools
-pip install --upgrade pip setuptools wheel
+echo "Starting build process..."
 
-# Install packages without Rust dependencies
-pip install fastapi==0.104.0 uvicorn==0.23.2 pymongo==4.6.0 pydantic==2.4.2 python-dotenv==1.0.0 motor==3.3.1 gunicorn==21.2.0
+# Upgrade pip
+pip install --upgrade pip
 
-# Try to install cryptography with binary wheels
-pip install --only-binary=:all: cryptography || echo "Skipping cryptography installation"
+# Install only pure Python packages
+pip install --no-deps fastapi==0.104.0 uvicorn==0.23.2 pymongo==4.6.0 pydantic==2.4.2 python-dotenv==1.0.0 motor==3.3.1 gunicorn==21.2.0
 
-# Install any remaining packages
-pip install -r requirements.txt || echo "Some packages may not have been installed"
+# Install any dependencies of the above packages, but only if they don't require compilation
+pip install --only-binary=:all: -r requirements.txt || echo "Warning: Some dependencies may not have been installed"
 
-echo "Build completed" 
+echo "Build completed successfully" 
