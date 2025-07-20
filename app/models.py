@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from bson import ObjectId
 
-# Custom ObjectId field for Pydantic
 class PyObjectId(str):
     @classmethod
     def __get_validators__(cls):
@@ -14,7 +13,6 @@ class PyObjectId(str):
             raise ValueError("Invalid ObjectId")
         return str(v)
 
-# Product Models
 class Size(BaseModel):
     size: str
     quantity: int
@@ -35,7 +33,6 @@ class ProductResponse(BaseModel):
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
 
-# Order Models
 class OrderItem(BaseModel):
     productId: str
     qty: int
@@ -71,13 +68,11 @@ class OrderListResponse(BaseModel):
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
 
-# Pagination Model
 class PaginationResponse(BaseModel):
     next: Optional[str]
     limit: int
     previous: Optional[str]
 
-# Response Models
 class ProductListResponse(BaseModel):
     data: List[ProductResponse]
     page: PaginationResponse

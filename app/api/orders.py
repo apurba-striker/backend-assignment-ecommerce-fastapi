@@ -55,9 +55,26 @@ async def get_orders(
     cursor = db.orders.find(query).skip(offset).limit(limit)
     orders = await cursor.to_list(length=limit)
     
-    # Convert ObjectId to string
+    # Format orders according to required response structure
+    formatted_orders = []
     for order in orders:
-        order["id"] = str(order.pop("_id"))
+        formatted_order = {
+            "id": str(order.pop("_id")),
+            "items": [],
+            "total": order["total"]
+        }
+        
+        # Format items to match required structure
+        for item in order["items"]:
+            formatted_order["items"].append({
+                "productDetails": {
+                    "name": item["productDetails"]["name"],
+                    "id": item["productDetails"]["id"]
+                },
+                "qty": item["qty"]
+            })
+            
+        formatted_orders.append(formatted_order)
     
     # Get total count for pagination
     total = await db.orders.count_documents(query)
@@ -67,10 +84,10 @@ async def get_orders(
     previous_offset = offset - limit if offset - limit >= 0 else None
     
     return {
-        "data": orders,
+        "data": formatted_orders,
         "page": {
             "next": str(next_offset) if next_offset is not None else None,
-            "limit": len(orders),
+            "limit": limit,
             "previous": str(previous_offset) if previous_offset is not None else None
         }
     } 

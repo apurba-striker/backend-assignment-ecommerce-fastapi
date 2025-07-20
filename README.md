@@ -39,8 +39,8 @@ This is a simple e-commerce API built with FastAPI and MongoDB that provides end
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/apurba-striker/backend-assignment-ecommerce-fastapi.git
+cd backend-assignment-ecommerce-fastapi
 ```
 
 2. Create a virtual environment and activate it:
@@ -49,8 +49,6 @@ cd <repository-directory>
 python -m venv venv
 # On Windows
 venv\Scripts\activate
-# On macOS/Linux
-source venv/bin/activate
 ```
 
 3. Install dependencies:
