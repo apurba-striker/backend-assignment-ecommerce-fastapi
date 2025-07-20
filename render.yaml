@@ -2,7 +2,7 @@ services:
   - type: web
     name: hroneassignment-api
     runtime: python
-    buildCommand: pip install -r build-dependencies.txt && pip install --only-binary=:all: -r requirements.txt || pip install -r requirements.txt
+    buildCommand: bash build.sh
     startCommand: gunicorn app.main:app -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT
     envVars:
       - key: MONGODB_URL
