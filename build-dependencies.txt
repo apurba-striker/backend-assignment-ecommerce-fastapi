@@ -1,2 +1,4 @@
 wheel
-setuptools-rust 
+setuptools-rust
+setuptools>=65.5.1
+pip>=23.0.1 
